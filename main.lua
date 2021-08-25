@@ -202,18 +202,20 @@ function getGroupLocations(index)
 end
 
 function checkWhoHasArrived(stone)
-    GameTooltip:AddLine("Needs Summon:", 1, 1, 1, false)
-    for i = 1, GetNumGroupMembers(), 1 do
-        if UnitInParty("Player") or UnitInRaid("Player") then
-            local member  = getGroupLocations(i)
-            for i = 1, #stone, 1 do
-                if member.location == stone[i] then
-                    member.hasArrived = true
+    if IsInGroup() then
+        GameTooltip:AddLine("Needs Summon:", 1, 1, 1, false)
+        for i = 1, GetNumGroupMembers(), 1 do
+            if UnitInParty("Player") or UnitInRaid("Player") then
+                local member  = getGroupLocations(i)
+                for i = 1, #stone, 1 do
+                    if member.location == stone[i] then
+                        member.hasArrived = true
+                    end
                 end
-            end
-            if not member.hasArrived then
-                GameTooltip:AddLine(member.name, classColors[member.class:lower()].r, classColors[member.class:lower()].g, classColors[member.class:lower()].b, false)
-                GameTooltip:Show()
+                if not member.hasArrived then
+                    GameTooltip:AddLine(member.name, classColors[member.class:lower()].r, classColors[member.class:lower()].g, classColors[member.class:lower()].b, false)
+                    GameTooltip:Show()
+                end
             end
         end
     end
