@@ -2,5 +2,6 @@
 ## Title: WhoNeedsASummon
 ## Version: 1.21
 ## Author: Fyfor-Whitemane
+## SavedVariablesPerCharacter: neverAgain
 
 main.lua
