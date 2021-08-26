@@ -1,6 +1,8 @@
 local inDebugMode = false
 local switcher = false
+local didPopup = false
 
+neverAgain = false
 
 local GameTooltipLine1 = ""
 local GameTooltipLine2 = ""
@@ -25,35 +27,35 @@ classColors = {
 -- https://wowpedia.fandom.com/wiki/UiMapID/Classic
 
 -- Vanilla Locations - Kalimdor
-Ragefire_Chasm = {
+RagefireChasm = {
     1454, 213
 }
 
-Wailing_Caverns = {
+WailingCaverns = {
     1413, 11, 279, 825
 }
 
-Razorfen_Downs = {
+RazorfenDowns = {
     1413, 300
 }
 
-Razorfen_Kraul = {
+RazorfenKraul = {
     1413, 301
 }
 
-Zul_Farrak = {
+ZulFarrak = {
     1446, 219
 }
 
-Ahn_Qiraj = {
+AhnQiraj = {
     1451, 327, 247, 319, 320, 321
 }
 
-Dire_Maul = {
+DireMaul = {
     1444, 2324, 235, 236, 237, 238, 239, 240
 }
 
-Onyxias_Lair = {
+OnyxiasLair = {
     1445, 248
 }
 
@@ -61,53 +63,53 @@ Maraudon = {
     1443, 67, 68, 280, 281
 }
 
-Blackfathom_Deeps = {
+BlackfathomDeeps = {
     1440, 221, 222, 223
 }
 
 -- Vanilla locations - Eastern Kingdoms
-The_Deadmines = {
+TheDeadmines = {
     1436, 55, 291, 292, 835, 836
 }
 
-Shadowfang_Keep = {
-    1421,
+ShadowfangKeep = {
+    1421, 311, 312, 313, 314, 315, 316
 }
 
-The_Stockade = {
-    1453
+TheStockade = {
+    1453, 1013, 225
 }
 
 Gnomeregan = {
-    1426
+    1426, 226, 227, 228, 229, 840, 841, 842, 1371, 1372, 1374, 1380
 }
 
-Scarlet_Monastery = {
-    1420
+ScarletMonastery = {
+    1420, 19, 302, 303, 304, 305, 435, 436, 804, 805
 }
 
 Uldaman = {
-    1418
+    1418, 16, 230, 231
 }
 
-The_Temple_Of_Atal_Hakkar = {
-    1435
+TheTempleofAtalHakkar = {
+    1415, 220
 }
 
-Blackrock_Mountain = {
-    1428
+BlackrockMountain = {
+    1428, 33, 34, 232, 250, 251, 252, 253, 254, 255, 283, 284, 285, 286, 287, 288, 289, 290, 616, 617, 618, 868, 1538, 1539, 1560
 }
 
 Scholomance = {
-    1422
+    1422, 306, 307, 308, 309, 476, 477, 478, 479
 }
 
 Stratholme = {
-    1423
+    1423, 317, 318, 1505, 827
 }
 
-Zul_Gurub = {
-    1434
+ZulGurub = {
+    1434, 233, 337
 }
 
 -- TBC Locations
@@ -115,11 +117,11 @@ Auchindoun = {
     1952, 256, 257, 258, 259, 260, 272
 }
 
-Serpentshrine_Cavern = {
+SerpentshrineCavern = {
     1946, 262, 263, 264, 265, 332, 1554
 }
 
-Blades_Edge_Mountains = {
+BladesEdgeMountains = {
     1949, 330
 }
 
@@ -127,11 +129,11 @@ Netherstorm = {
     1953, 112, 266, 267, 268, 269, 270, 271, 334, 397, 889, 890, 1555
 }
 
-Hellfire_Citadel = {
-    1944,
+HellfireCitadel = {
+    1944, 662, 663, 664, 665, 666, 667, 668, 669, 670, 246, 261, 331, 347
 }
 
-Black_Temple = {
+BlackTemple = {
     1948, 339, 490, 540, 541, 574, 575, 576, 582, 759
 }
 
@@ -139,11 +141,11 @@ Karazhan = {
     1430, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 794, 795, 796, 797, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822
 }
 
-Caverns_Of_Time = {
+CavernsofTime = {
     1446, 273, 274, 329, 74, 75, 1552, 1553
 }
 
-Zul_Aman = {
+ZulAman = {
     1942, 333
 }
 
@@ -164,7 +166,8 @@ function checkWhoHasArrived(stone)
             local member  = getGroupLocations(i)
             if inDebugMode then
                 print(member.location, C_Map.GetBestMapForUnit(member.name))
-            elseif not inDebugMode then
+            end
+            if _G[stone] then
                 for i = 1, #_G[stone], 1 do
 
                     if member.uiMapID == _G[stone][i] then
@@ -193,7 +196,12 @@ local function ToolTipOnShow()
         GameTooltipLine3 = GameTooltipTextLeft3:GetText()
 
         if GameTooltipLine1 == "Meeting Stone" then
-            GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "_")
+            if not didPopup and not neverAgain then
+                StaticPopup_Show ("WELCOME")
+                didPopup = true
+            end
+            GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "")
+            GameTooltipLine2 = GameTooltipLine2:gsub("'", "")
             checkWhoHasArrived(GameTooltipLine2)
         end
     end
@@ -213,5 +221,24 @@ end
 GameTooltip:HookScript("OnHide", ToolTipOnHide)
 
 if inDebugMode then
-    C_Timer.NewTicker(1, checkWhoHasArrived)
+    C_Timer.NewTicker(10, checkWhoHasArrived)
 end
+
+SLASH_GETLOC1 = "/getloc"
+
+SlashCmdList["GETLOC"] = function()
+    print("Please give the following |cff00ff98information|r to the developer by commenting on the addon page on |cffff7017CurseForge|r or whispering |cff7289daMooMooMoo#0403|r on Discord: |cff00ff98\n" .. C_Map.GetBestMapForUnit("Player") .. "-" .. GetRealZoneText() .." |r")
+end
+
+StaticPopupDialogs["WELCOME"] = {
+  text = "Thank you for downloading |cff00ff98\"Who needs a summon?\"|r This addon is still very much in development. If you run into any issues with names incorrectly displaying on meeting stones, please type |cff00ff98/getloc|r and follow the instructions given. Happy gaming!",
+  button1 = "Will do",
+  button2 = "Never show this again",
+  OnCancel = function()
+     neverAgain = true
+  end,
+  timeout = 0,
+  whileDead = true,
+  hideOnEscape = true,
+  preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+}
