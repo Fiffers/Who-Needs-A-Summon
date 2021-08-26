@@ -1,5 +1,5 @@
 ## Interface: 20501
 ## Title: WhoNeedsASummon
-## Version: 1.0
+## Version: 1.1
 
 summon.xml
