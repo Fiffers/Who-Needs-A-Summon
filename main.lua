@@ -1,4 +1,6 @@
 local inDebugMode = false
+local switcher = false
+
 
 local GameTooltipLine1 = ""
 local GameTooltipLine2 = ""
@@ -203,19 +205,20 @@ end
 
 function checkWhoHasArrived(stone)
     if IsInGroup() then
-        GameTooltip:AddLine("Needs Summon:", 1, 1, 1, false)
         for i = 1, GetNumGroupMembers(), 1 do
-            if UnitInParty("Player") or UnitInRaid("Player") then
-                local member  = getGroupLocations(i)
-                for i = 1, #stone, 1 do
-                    if member.location == stone[i] then
-                        member.hasArrived = true
-                    end
+            local member  = getGroupLocations(i)
+            for i = 1, #_G[stone], 1 do
+                if member.location == _G[stone][i] then
+                    member.hasArrived = true
                 end
-                if not member.hasArrived then
-                    GameTooltip:AddLine(member.name, classColors[member.class:lower()].r, classColors[member.class:lower()].g, classColors[member.class:lower()].b, false)
-                    GameTooltip:Show()
+            end
+            if not member.hasArrived then
+                if not switcher then
+                    GameTooltip:AddLine("Needs Summon:", 1, 1, 1, false)
+                    switcher = true
                 end
+                GameTooltip:AddLine(member.name, classColors[member.class:lower()].r, classColors[member.class:lower()].g, classColors[member.class:lower()].b, false)
+                GameTooltip:Show()
             end
         end
     end
@@ -223,114 +226,17 @@ end
 
 -- CreateEvent when GameToolTip Update
 local function ToolTipOnShow()
+    switcher = false
     if not (GameTooltipLine1 == GameTooltipTextLeft1:GetText() and GameTooltipLine2 == GameTooltipTextLeft2:GetText() and GameTooltipLine3 == GameTooltipTextLeft3:GetText()) then
         if (inDebugMode) then
             DEFAULT_CHAT_FRAME:AddMessage("Tooltip OnShow Event fired!")
         end
-
         GameTooltipLine1 = GameTooltipTextLeft1:GetText()
         GameTooltipLine2 = GameTooltipTextLeft2:GetText()
         GameTooltipLine3 = GameTooltipTextLeft3:GetText()
 
         if GameTooltipLine1 == "Meeting Stone" then
-            -- Vanilla Locations - Kalimdor
-            if GameTooltipLine2 == "Ragefire Chasm" then
-                checkWhoHasArrived(Ragefire_Chasm)
-            end
-            if GameTooltipLine2 == "Wailing Caverns" then
-                checkWhoHasArrived(Wailing_Caverns)
-            end
-            if GameTooltipLine2 == "Razorfen Downs" then
-                checkWhoHasArrived(Razorfen_Downs)
-            end
-            if GameTooltipLine2 == "Razorfen Kraul" then
-                checkWhoHasArrived(Razorfen_Kraul)
-            end
-            if GameTooltipLine2 == "Zul'Farrak" then
-                checkWhoHasArrived(Zul_Farrak)
-            end
-            if GameTooltipLine2 == "Ahn'Qiraj" then
-                checkWhoHasArrived(Ahn_Qiraj)
-            end
-            if GameTooltipLine2 == "Dire Maul" then
-                checkWhoHasArrived(Dire_Maul)
-            end
-            if GameTooltipLine2 == "Onyxia's Lair" then
-                checkWhoHasArrived(Onyxias_Lair)
-            end
-            if GameTooltipLine2 == "Maraudon" then
-                checkWhoHasArrived(Maraudon)
-            end
-            if GameTooltipLine2 == "Blackfathom Deeps" then
-                checkWhoHasArrived(Blackfathom_Deeps)
-            end
-
-            -- Vanilla Locations - Eastern Kingdoms
-            if GameTooltipLine2 == "The Deadmines" then
-                checkWhoHasArrived(The_Deadmines)
-            end
-            if GameTooltipLine2 == "Shadowfang Keep" then
-                checkWhoHasArrived(Shadowfang_Keep)
-            end
-            if GameTooltipLine2 == "The Stockade" then
-                checkWhoHasArrived(The_Stockade)
-            end
-            if GameTooltipLine2 == "Gnomeregan" then
-                checkWhoHasArrived(Gnomeregan)
-            end
-            if GameTooltipLine2 == "Scarlet Monastery" then
-                checkWhoHasArrived(Scarlet_Monastery)
-            end
-            if GameTooltipLine2 == "Uldaman" then
-                checkWhoHasArrived(Uldaman)
-            end
-            if GameTooltipLine2 == "The Temple of Atal'Hakkar" then
-                checkWhoHasArrived(The_Temple_Of_Atal_Hakkar)
-            end
-            if GameTooltipLine2 == "Blackrock Depths" then
-                checkWhoHasArrived(Blackrock_Depths)
-            end
-            if GameTooltipLine2 == "Blackrock Spire" then
-                checkWhoHasArrived(Blackrock_Spire)
-            end
-            if GameTooltipLine2 == "Scholomance" then
-                checkWhoHasArrived(Scholomance)
-            end
-            if GameTooltipLine2 == "Stratholme" then
-                checkWhoHasArrived(Stratholme)
-            end
-            if GameTooltipLine2 == "Zul'Gurub" then
-                checkWhoHasArrived(Zul_Gurub)
-            end
-
-            -- TBC Locations
-            if GameTooltipLine2 == "Auchindoun" then
-                checkWhoHasArrived(Auchindoun)
-            end
-            if GameTooltipLine2 == "Serpentshrine Cavern" then
-                checkWhoHasArrived(Serpentshrine_Cavern)
-            end
-            if GameTooltipLine2 == "Blade's Edge Mountains" then
-                checkWhoHasArrived(Blades_Edge_Mountains)
-            end
-            if GameTooltipLine2 == "Netherstorm" then
-                checkWhoHasArrived(Netherstorm)
-            end
-            if GameTooltipLine2 == "Hellfire Citadel" then
-                checkWhoHasArrived(Hellfire_Citadel)
-            end
-            if GameTooltipLine2 == "Black Temple" then
-                checkWhoHasArrived(Black_Temple)
-            end
-            if GameTooltipLine2 == "Caverns of Time" then
-                checkWhoHasArrived(Caverns_Of_Time)
-            end
-            if GameTooltipLine2 == "Zul'Aman" then
-                checkWhoHasArrived(Zul_Aman)
-            end
-            if GameTooltipLine2 == "Karazhan" then
-                checkWhoHasArrived(Karazhan)
-            end
+            checkWhoHasArrived(GameTooltipLine2)
         end
     end
 end
