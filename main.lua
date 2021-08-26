@@ -20,179 +20,131 @@ classColors = {
     warrior = {r = .78, g = .61, b = .43, hex = "C79C6E"}
 }
 
+-- All data below was found at:
+-- https://wowpedia.fandom.com/wiki/UiMapID
+-- https://wowpedia.fandom.com/wiki/UiMapID/Classic
+
 -- Vanilla Locations - Kalimdor
 Ragefire_Chasm = {
-    "Orgrimmar",
-    "Ragefire Chasm"
+    1454, 213
 }
 
 Wailing_Caverns = {
-    "The Barrens",
-    "Wailing Caverns"
+    1413, 11, 279, 825
 }
 
 Razorfen_Downs = {
-    "The Barrens",
-    "Razorfen Downs"
+    1413, 300
 }
 
 Razorfen_Kraul = {
-    "The Barrens",
-    "Razorfen Kraul"
+    1413, 301
 }
 
 Zul_Farrak = {
-    "Tanaris",
-    "Zul'Farrak"
+    1446, 219
 }
 
 Ahn_Qiraj = {
-    "Silithus",
-    "Ahn'Qiraj",
-    "Gates of Ahn'Qiraj",
-    "Ruins of Ahn'Qiraj",
-    "Temple of Ahn'Qiraj"
+    1451, 327, 247, 319, 320, 321
 }
 
 Dire_Maul = {
-    "Feralas",
-    "Dire Maul"
+    1444, 2324, 235, 236, 237, 238, 239, 240
 }
 
 Onyxias_Lair = {
-    "Dustwallow Marsh",
-    "Onyxia's Lair"
+    1445, 248
 }
 
 Maraudon = {
-    "Desolace",
-    "Maraudon"
+    1443, 67, 68, 280, 281
 }
 
 Blackfathom_Deeps = {
-    "Ashenvale",
-    "Blackfathom_Deeps"
+    1440, 221, 222, 223
 }
 
 -- Vanilla locations - Eastern Kingdoms
 The_Deadmines = {
-    "Westfall",
-    "The Deadmines"
+    1436, 55, 291, 292, 835, 836
 }
 
 Shadowfang_Keep = {
-    "Silverpine Forest",
-    "Shadowfang Keep"
+    1421,
 }
 
 The_Stockade = {
-    "Stormwind City",
-    "The Stockade"
+    1453
 }
 
 Gnomeregan = {
-    "Dun Morough",
-    "Gnomeregan"
+    1426
 }
 
 Scarlet_Monastery = {
-    "Tirisfal Glades",
-    "Scarlet_Monastery"
+    1420
 }
 
 Uldaman = {
-    "Badlands",
-    "Uldaman"
+    1418
 }
 
 The_Temple_Of_Atal_Hakkar = {
-    "Swamp of Sorrows",
-    "The Temple of Atal'Hakkar"
+    1435
 }
 
 Blackrock_Mountain = {
-    "Burning Steppes",
-    "Blackrock Mountain",
-    "Blackrock Depths",
-    "Blackrock Spire",
-    "Molten Core",
-    "Blackwing Lair"
+    1428
 }
 
 Scholomance = {
-    "Western Plaguelands",
-    "Scholomance"
+    1422
 }
 
 Stratholme = {
-    "Eastern Plaguelands",
-    "Stratholme"
+    1423
 }
 
 Zul_Gurub = {
-    "Stranglethorn Vale",
-    "Zul'Gurub"
+    1434
 }
 
 -- TBC Locations
 Auchindoun = {
-    "Terokkar Forest",
-    "Sethekk Halls",
-    "Shadow Labyrinth",
-    "Auchenai Crypts",
-    "Mana Tombs"
+    1952, 256, 257, 258, 259, 260, 272
 }
 
 Serpentshrine_Cavern = {
-    "Zangarmarsh",
-    "Slave Pens",
-    "Steam Vaults",
-    "Underbog",
-    "Serpentshrine Cavern"
+    1946, 262, 263, 264, 265, 332, 1554
 }
 
 Blades_Edge_Mountains = {
-    "Blade's Edge Mountains",
-    "Gruul's Lair"
+    1949, 330
 }
 
 Netherstorm = {
-    "Netherstorm",
-    "The Mechanar",
-    "The Botanica",
-    "The Arcatraz",
-    "The Eye"
+    1953, 112, 266, 267, 268, 269, 270, 271, 334, 397, 889, 890, 1555
 }
 
 Hellfire_Citadel = {
-    "Hellfire Peninsula",
-    "Hellfire Ramparts",
-    "The Blood Furnace",
-    "The Shattered Halls",
-    "Magtheridon's Lair"
+    1944,
 }
 
 Black_Temple = {
-    "Shadowmoon Valley",
-    "Black Temple"
+    1948, 339, 490, 540, 541, 574, 575, 576, 582, 759
 }
 
 Karazhan = {
-    "Deadwind Pass",
-    "Karazhan"
+    1430, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 794, 795, 796, 797, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822
 }
 
 Caverns_Of_Time = {
-    "Tanaris",
-    "Caverns of Time",
-    "Old Hillsbrad",
-    "Black Morass",
-    "Hyjal Summit",
+    1446, 273, 274, 329, 74, 75, 1552, 1553
 }
 
 Zul_Aman = {
-    "Ghostlands",
-    "Zul'Aman"
+    1942, 333
 }
 
 
@@ -200,25 +152,33 @@ Zul_Aman = {
 function getGroupLocations(index)
     name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(index);
     local member = {name = name, location = zone, class = class, hasArrived = false}
+    member.uiMapID = C_Map.GetBestMapForUnit(member.name)
     return member
 end
+
+
 
 function checkWhoHasArrived(stone)
     if IsInGroup() then
         for i = 1, GetNumGroupMembers(), 1 do
             local member  = getGroupLocations(i)
-            for i = 1, #_G[stone], 1 do
-                if member.location == _G[stone][i] then
-                    member.hasArrived = true
+            if inDebugMode then
+                print(member.location, C_Map.GetBestMapForUnit(member.name))
+            elseif not inDebugMode then
+                for i = 1, #_G[stone], 1 do
+
+                    if member.uiMapID == _G[stone][i] then
+                        member.hasArrived = true
+                    end
                 end
-            end
-            if not member.hasArrived then
-                if not switcher then
-                    GameTooltip:AddLine("Needs Summon:", 1, 1, 1, false)
-                    switcher = true
+                if not member.hasArrived then
+                    if not switcher then
+                        GameTooltip:AddLine("Needs Summon:", 1, 1, 1, false)
+                        switcher = true
+                    end
+                    GameTooltip:AddLine(member.name, classColors[member.class:lower()].r, classColors[member.class:lower()].g, classColors[member.class:lower()].b, false)
+                    GameTooltip:Show()
                 end
-                GameTooltip:AddLine(member.name, classColors[member.class:lower()].r, classColors[member.class:lower()].g, classColors[member.class:lower()].b, false)
-                GameTooltip:Show()
             end
         end
     end
@@ -228,14 +188,12 @@ end
 local function ToolTipOnShow()
     switcher = false
     if not (GameTooltipLine1 == GameTooltipTextLeft1:GetText() and GameTooltipLine2 == GameTooltipTextLeft2:GetText() and GameTooltipLine3 == GameTooltipTextLeft3:GetText()) then
-        if (inDebugMode) then
-            DEFAULT_CHAT_FRAME:AddMessage("Tooltip OnShow Event fired!")
-        end
         GameTooltipLine1 = GameTooltipTextLeft1:GetText()
         GameTooltipLine2 = GameTooltipTextLeft2:GetText()
         GameTooltipLine3 = GameTooltipTextLeft3:GetText()
 
         if GameTooltipLine1 == "Meeting Stone" then
+            GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "_")
             checkWhoHasArrived(GameTooltipLine2)
         end
     end
@@ -246,9 +204,6 @@ GameTooltip:HookScript("OnShow", ToolTipOnShow)
 -- CreateEvent when GameToolTip Update
 local function ToolTipOnHide()
     if not (GameTooltipLine1 == GameTooltipTextLeft1:GetText() and GameTooltipLine2 == GameTooltipTextLeft2:GetText() and GameTooltipLine3 == GameTooltipTextLeft3:GetText()) then
-        if (inDebugMode) then
-            DEFAULT_CHAT_FRAME:AddMessage("Tooltip OnHide Event fired!")
-        end
         GameTooltipLine1 = GameTooltipTextLeft1:GetText()
         GameTooltipLine2 = GameTooltipTextLeft2:GetText()
         GameTooltipLine3 = GameTooltipTextLeft3:GetText()
@@ -256,3 +211,7 @@ local function ToolTipOnHide()
 end
 
 GameTooltip:HookScript("OnHide", ToolTipOnHide)
+
+if inDebugMode then
+    C_Timer.NewTicker(1, checkWhoHasArrived)
+end
