@@ -1,6 +1,6 @@
 ## Interface: 20501
 ## Title: WhoNeedsASummon
-## Version: 1.1
+## Version: 1.2
 ## Author: Fyfor-Whitemane
 
 main.lua
