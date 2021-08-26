@@ -7,6 +7,7 @@ neverAgain = false
 local GameTooltipLine1 = ""
 local GameTooltipLine2 = ""
 local GameTooltipLine3 = ""
+local savedStoneName = ""
 
 -- RGB and HEX colors for each class through WotLK, because that's all that matters
 classColors = {
@@ -200,6 +201,7 @@ local function ToolTipOnShow()
                 StaticPopup_Show ("WELCOME")
                 didPopup = true
             end
+            savedStoneName = GameTooltipLine2
             GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "")
             GameTooltipLine2 = GameTooltipLine2:gsub("'", "")
             checkWhoHasArrived(GameTooltipLine2)
@@ -227,7 +229,14 @@ end
 SLASH_GETLOC1 = "/getloc"
 
 SlashCmdList["GETLOC"] = function()
-    print("Please give the following |cff00ff98information|r to the developer by commenting on the addon page on |cffff7017CurseForge|r or whispering |cff7289daMooMooMoo#0403|r on Discord: |cff00ff98\n" .. C_Map.GetBestMapForUnit("Player") .. "-" .. GetRealZoneText() .." |r")
+    local printStr = "Please give the following |cff00ff98information|r to the developer by commenting on the addon page on |cffff7017CurseForge|r or whispering |cff7289daMooMooMoo#0403|r on Discord: |cff00ff98\nZone ID:|r " .. C_Map.GetBestMapForUnit("Player") .. "\n|cff00ff98Zone Name:|r " .. GetRealZoneText()
+    if savedStoneName ~= "" then
+        printStr = printStr .. "\n|cff00ff98Stone Name:|r " .. savedStoneName .."|r"
+    else
+        printStr = printStr .. "|r"
+    end
+    print(printStr)
+    savedStoneName = ""
 end
 
 StaticPopupDialogs["WELCOME"] = {
