@@ -3,4 +3,4 @@
 ## Version: 1.1
 ## Author: Fyfor-Whitemane
 
-summon.xml
+main.lua
