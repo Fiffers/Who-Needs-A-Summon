@@ -177,7 +177,6 @@ function checkWhoHasArrived(stone)
             if _G[stone] then
                 for i = 1, #_G[stone], 1 do
                     if member.uiMapID == _G[stone][i] or member.location == _G[stone][i] then
-                        print(_G[stone][i], member.uiMapID, member.location)
                         member.hasArrived = true
                     end
                 end
