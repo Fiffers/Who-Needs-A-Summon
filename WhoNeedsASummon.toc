@@ -1,6 +1,6 @@
 ## Interface: 20502
 ## Title: WhoNeedsASummon
-## Version: 1.32
+## Version: 1.33
 ## Author: Fyfor-Whitemane
 ## SavedVariablesPerCharacter: neverAgain
 
