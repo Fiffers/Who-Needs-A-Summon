@@ -1,14 +1,13 @@
 local inDebugMode = false
 local switcher = false
-local didPopup = false
-
-neverAgain = false
 
 local GameTooltipLine1 = ""
 local GameTooltipLine2 = ""
 local GameTooltipLine3 = ""
 local savedStoneName = ""
 local locationIDs = {}
+
+local SAVED_PER_CHAR
 
 local _G, print, C_Map, GetRaidRosterInfo, GetNumGroupMembers, IsInGroup, GetRealZoneText, StaticPopup_Show =
       _G, print, C_Map, GetRaidRosterInfo, GetNumGroupMembers, IsInGroup, GetRealZoneText, StaticPopup_Show
@@ -210,9 +209,8 @@ local function ToolTipOnShow()
         GameTooltipLine3 = GameTooltipTextLeft3:GetText()
 
         if GameTooltipLine1 == "Meeting Stone" then
-            if not didPopup and not neverAgain then
-                StaticPopup_Show ("WELCOME")
-                didPopup = true
+            if not SAVED_PER_CHAR.neverAgain then
+                StaticPopup_Show("WhoNeedsASummon_WELCOME")
             end
             savedStoneName = GameTooltipLine2
             GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "")
@@ -259,6 +257,20 @@ if inDebugMode then
 end
 
 
+local frame = CreateFrame("Frame")
+frame:SetScript("OnEvent", function(_, event, ...)
+    local arg1 = ...
+    if event == "ADDON_LOADED" and arg1 == "WhoNeedsASummon" then
+        frame:UnregisterEvent("ADDON_LOADED")
+        
+        if _G.WhoNeedsASummon_PerCharacter == nil then
+            _G.WhoNeedsASummon_PerCharacter = { neverAgain = _G.neverAgain } -- copy the old savedvariable
+        end
+        SAVED_PER_CHAR = _G.WhoNeedsASummon_PerCharacter
+    end
+end)
+frame:RegisterEvent("ADDON_LOADED")
+
 
 _G.SLASH_GETLOC1 = "/getloc"
 
@@ -282,7 +294,7 @@ StaticPopupDialogs["WhoNeedsASummon_WELCOME"] = {
   button1 = "Will do",
   button2 = "Never show this again",
   OnCancel = function()
-     neverAgain = true
+     SAVED_PER_CHAR.neverAgain = true
   end,
   timeout = 0,
   whileDead = true,
