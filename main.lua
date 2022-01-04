@@ -10,8 +10,11 @@ local GameTooltipLine3 = ""
 local savedStoneName = ""
 local locationIDs = {}
 
+local _G, print, C_Map, GetRaidRosterInfo, GetNumGroupMembers, IsInGroup, GetRealZoneText, StaticPopup_Show =
+      _G, print, C_Map, GetRaidRosterInfo, GetNumGroupMembers, IsInGroup, GetRealZoneText, StaticPopup_Show
+
 -- RGB and HEX colors for each class through WotLK, because that's all that matters
-classColors = {
+local classColors = {
     deathknight = {r = .77, g = .12, b = .23, hex = "C41F3B"},
     druid = {r = 1, g = .49, b = .04, hex = "FF7D0A"},
     hunter = {r = .67, g = .83, b = .45, hex = "ABD473"},
@@ -153,8 +156,8 @@ locationIDs["ZulAman"] = {
 
 
 
-function getGroupLocations(index)
-    name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(index);
+local function getGroupLocations(index)
+    local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(index);
     local member = {name = name, location = zone, class = class, hasArrived = false}
     member.uiMapID = C_Map.GetBestMapForUnit(member.name)
     return member
@@ -162,7 +165,7 @@ end
 
 
 
-function checkWhoHasArrived(stone)
+local function checkWhoHasArrived(stone)
     if IsInGroup() then
         for i = 1, GetNumGroupMembers(), 1 do
             local member  = getGroupLocations(i)
@@ -257,7 +260,7 @@ end
 
 
 
-SLASH_GETLOC1 = "/getloc"
+_G.SLASH_GETLOC1 = "/getloc"
 
 SlashCmdList["GETLOC"] = function()
     local uiMapId = C_Map.GetBestMapForUnit("Player")
@@ -274,7 +277,7 @@ SlashCmdList["GETLOC"] = function()
     savedStoneName = ""
 end
 
-StaticPopupDialogs["WELCOME"] = {
+StaticPopupDialogs["WhoNeedsASummon_WELCOME"] = {
   text = "Thank you for downloading |cff00ff98\"Who needs a summon?\"|r This addon is still very much in development. If you run into any issues with names incorrectly displaying on meeting stones, please type |cff00ff98/getloc|r and follow the instructions given. Happy gaming!",
   button1 = "Will do",
   button2 = "Never show this again",
