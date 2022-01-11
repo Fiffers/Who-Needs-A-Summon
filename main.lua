@@ -276,7 +276,7 @@ _G.SLASH_GETLOC1 = "/getloc"
 
 SlashCmdList["GETLOC"] = function()
     local uiMapId = C_Map.GetBestMapForUnit("Player")
-    local printStr = "Please give the following |cff00ff98information|r to the developer by commenting on the addon page on |cffff7017CurseForge|r or whispering |cff7289daMooMooMoo#0403|r on Discord: |cff00ff98\nZone Name:|r " .. GetRealZoneText()
+    local printStr = "Please give the following |cff00ff98information|r to the developer by commenting on the addon page on |cffff7017CurseForge|r or whispering |cff7289daFyfor#0403|r on Discord: |cff00ff98\nZone Name:|r " .. GetRealZoneText()
     if uiMapId then
         printStr = printStr ..   "\n|cff00ff98Zone ID:|r " .. uiMapId
     end
