@@ -1,8 +1,5 @@
 local inDebugMode = false
 local switcher = false
-local didPopup = false
-
-neverAgain = false
 
 local GameTooltipLine1 = ""
 local GameTooltipLine2 = ""
@@ -10,8 +7,13 @@ local GameTooltipLine3 = ""
 local savedStoneName = ""
 local locationIDs = {}
 
+local SAVED_PER_CHAR
+
+local _G, print, C_Map, GetRaidRosterInfo, GetNumGroupMembers, IsInGroup, GetRealZoneText, StaticPopup_Show =
+      _G, print, C_Map, GetRaidRosterInfo, GetNumGroupMembers, IsInGroup, GetRealZoneText, StaticPopup_Show
+
 -- RGB and HEX colors for each class through WotLK, because that's all that matters
-classColors = {
+local classColors = {
     deathknight = {r = .77, g = .12, b = .23, hex = "C41F3B"},
     druid = {r = 1, g = .49, b = .04, hex = "FF7D0A"},
     hunter = {r = .67, g = .83, b = .45, hex = "ABD473"},
@@ -153,8 +155,8 @@ locationIDs["ZulAman"] = {
 
 
 
-function getGroupLocations(index)
-    name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(index);
+local function getGroupLocations(index)
+    local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(index);
     local member = {name = name, location = zone, class = class, hasArrived = false}
     member.uiMapID = C_Map.GetBestMapForUnit(member.name)
     return member
@@ -162,7 +164,7 @@ end
 
 
 
-function checkWhoHasArrived(stone)
+local function checkWhoHasArrived(stone)
     if IsInGroup() then
         for i = 1, GetNumGroupMembers(), 1 do
             local member  = getGroupLocations(i)
@@ -207,9 +209,8 @@ local function ToolTipOnShow()
         GameTooltipLine3 = GameTooltipTextLeft3:GetText()
 
         if GameTooltipLine1 == "Meeting Stone" then
-            if not didPopup and not neverAgain then
-                StaticPopup_Show ("WELCOME")
-                didPopup = true
+            if not SAVED_PER_CHAR.neverAgain then
+                StaticPopup_Show("WhoNeedsASummon_WELCOME")
             end
             savedStoneName = GameTooltipLine2
             GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "")
@@ -256,8 +257,22 @@ if inDebugMode then
 end
 
 
+local frame = CreateFrame("Frame")
+frame:SetScript("OnEvent", function(_, event, ...)
+    local arg1 = ...
+    if event == "ADDON_LOADED" and arg1 == "WhoNeedsASummon" then
+        frame:UnregisterEvent("ADDON_LOADED")
+        
+        if _G.WhoNeedsASummon_PerCharacter == nil then
+            _G.WhoNeedsASummon_PerCharacter = { neverAgain = _G.neverAgain } -- copy the old savedvariable
+        end
+        SAVED_PER_CHAR = _G.WhoNeedsASummon_PerCharacter
+    end
+end)
+frame:RegisterEvent("ADDON_LOADED")
 
-SLASH_GETLOC1 = "/getloc"
+
+_G.SLASH_GETLOC1 = "/getloc"
 
 SlashCmdList["GETLOC"] = function()
     local uiMapId = C_Map.GetBestMapForUnit("Player")
@@ -274,12 +289,12 @@ SlashCmdList["GETLOC"] = function()
     savedStoneName = ""
 end
 
-StaticPopupDialogs["WELCOME"] = {
+StaticPopupDialogs["WhoNeedsASummon_WELCOME"] = {
   text = "Thank you for downloading |cff00ff98\"Who needs a summon?\"|r This addon is still very much in development. If you run into any issues with names incorrectly displaying on meeting stones, please type |cff00ff98/getloc|r and follow the instructions given. Happy gaming!",
   button1 = "Will do",
   button2 = "Never show this again",
   OnCancel = function()
-     neverAgain = true
+     SAVED_PER_CHAR.neverAgain = true
   end,
   timeout = 0,
   whileDead = true,
