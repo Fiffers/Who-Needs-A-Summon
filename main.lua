@@ -193,7 +193,6 @@ local function checkWhoHasArrived(stone)
                     end
                     GameTooltip:AddLine(member.name, classColors[member.class:lower()].r, classColors[member.class:lower()].g, classColors[member.class:lower()].b, false)
                     GameTooltip:Show()
-                    return member.name
                 end
             end
         end
