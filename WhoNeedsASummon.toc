@@ -1,7 +1,7 @@
-## Interface: 20501
+## Interface: 20502
 ## Title: WhoNeedsASummon
-## Version: 1.35
+## Version: 1.33
 ## Author: Fyfor-Whitemane
-## SavedVariablesPerCharacter: neverAgain
+## SavedVariablesPerCharacter: WhoNeedsASummon_PerCharacter
 
 main.lua
