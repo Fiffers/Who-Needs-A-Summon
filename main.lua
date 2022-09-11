@@ -153,7 +153,62 @@ locationIDs["ZulAman"] = {
     1942, 333, "Zul'Aman"
 }
 
+locationIDs["MagistersTerrace"] = {
+	1957, "Magisters' Terrace"
+}
 
+locationIDs["SunwellPlateau"] = {
+	1957, "Sunwell Plateau"
+}
+
+-- WotLK Locations | I STILL NEED TO UPDATE THESE IF THEY ARE INCORRECT
+locationIDs["TheNexus"] = {
+	114, 1396, "The Nexus", "The Oculus", "The Eye of Eternity"
+}
+
+locationIDs["AzjolNerub"] = {
+	115, 1397, "Azjol-Nerub", "Ahn'kahet: The Old Kingdom"
+}
+
+locationIDs["WyrmRestTemple"] = {
+	115, 1397, "The Ruby Sanctum", "The Obsidian Sanctum", "Wyrmrest Temple"
+}
+
+locationIDs["Naxxramas"] = {
+	115, 1397, "Naxxramas"
+}
+
+locationIDs["UtgardeKeep"] = {
+	117, 1399, "Utgarde Keep"
+}
+
+locationIDs["UtgardePinnacle"] = {
+	117, 1399, "Utgarde Pinnacle"
+}
+
+locationIDs["TheFrozenHalls"] = {
+	118, 1400, "The Forge of Souls", "The Pit of Saron", "The Halls of Reflection", "The Frozen Halls (80)"
+}
+
+locationIDs["IcecrownCitadel"] = {
+	118, 1400, "Icecrown Citadel"
+}
+
+locationIDs["Ulduar"] = {
+	120, 1402, "Halls of Stone", "Halls of Lightning", "Ulduar"
+}
+
+locationIDs["DrakTharonKeep"] = {
+	121, 1403, "Drak'Tharon Keep"
+}
+
+locationIDs["Gundrak"] = {
+	121, 1403, "Gundrak"
+}
+
+locationIDs["VaultofArchavon"] = {
+	123, 1404, "Vault of Archavon"
+}
 
 local function getGroupLocations(index)
     local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(index);
@@ -208,6 +263,7 @@ local function ToolTipOnShow()
         GameTooltipLine3 = GameTooltipTextLeft3:GetText()
 
         if GameTooltipLine1 == "Meeting Stone" then
+			
             if not SAVED_PER_CHAR.neverAgain then
                 StaticPopup_Show("WhoNeedsASummon_WELCOME")
             end
