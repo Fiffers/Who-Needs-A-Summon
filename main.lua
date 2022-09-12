@@ -187,7 +187,7 @@ locationIDs["UtgardePinnacle"] = {
 }
 
 locationIDs["TheFrozenHalls"] = {
-	118, 1400, "The Forge of Souls", "The Pit of Saron", "The Halls of Reflection", "The Frozen Halls (80)"
+	118, 1400, "The Forge of Souls", "The Pit of Saron", "The Halls of Reflection", "The Frozen Halls"
 }
 
 locationIDs["IcecrownCitadel"] = {
