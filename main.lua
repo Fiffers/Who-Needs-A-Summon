@@ -210,16 +210,21 @@ locationIDs["VaultofArchavon"] = {
 	123, 1404, "Vault of Archavon"
 }
 
+local function sterilizeStrings(input)
+	input = input:lower()
+	input = input:gsub("[%c%p%s]", "") -- Need to verify this works to remove spaces, apostrophes, and colons from location/class names
+	return input
+end
+
 local function getGroupLocations(index)
     local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(index);
     local member = {name = name, location = zone, class = class, hasArrived = false}
+	member.class = sterilizeStrings(member.class)
     member.uiMapID = C_Map.GetBestMapForUnit(member.name)
     return member
 end
 
-
-
-local function checkWhoHasArrived(stone)
+local function checkWithSummoningStone(stone)
     if IsInGroup() then
         for i = 1, GetNumGroupMembers(), 1 do
             local member  = getGroupLocations(i)
@@ -246,12 +251,34 @@ local function checkWhoHasArrived(stone)
                         GameTooltip:AddLine("Needs Summon:", 1, 1, 1, false)
                         switcher = true
                     end
-                    GameTooltip:AddLine(member.name, classColors[member.class:lower()].r, classColors[member.class:lower()].g, classColors[member.class:lower()].b, false)
+                    GameTooltip:AddLine(member.name, classColors[member.class].r, classColors[member.class].g, classColors[member.class].b, false)
                     GameTooltip:Show()
                 end
             end
         end
     end
+end
+
+
+local function checkWithSummoningPortal
+	if IsInGroup() then
+		local uiMapID = C_Map.GetBestMapForUnit("Player")
+		for i = 1, GetNumGroupMembers(), 1 do
+        	local member  = getGroupLocations(i)
+			if member.uiMapID == uiMapID then
+				member.hasArrived = true
+			end
+		end
+		
+		if not member.hasArrived then -- Needs to be moved to a separate function
+			if not switcher then
+				GameTooltip:Addline("Needs Summon:", 1, 1, 1, false)
+				switcher = true
+			end
+			GameTooltip:AddLine(member.name, classColors[member.class].r, classColors[member.class].g, classColors[member.class].b, false)
+			GameTooltip:Show()
+		end
+	end	
 end
 
 -- CreateEvent when GameToolTip Shows
@@ -268,10 +295,13 @@ local function ToolTipOnShow()
                 StaticPopup_Show("WhoNeedsASummon_WELCOME")
             end
             savedStoneName = GameTooltipLine2
-            GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "")
-            GameTooltipLine2 = GameTooltipLine2:gsub("'", "")
-            checkWhoHasArrived(GameTooltipLine2)
-        end
+            --GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "")
+            --GameTooltipLine2 = GameTooltipLine2:gsub("'", "")
+            checkWithSummoningStone(sterilizeStrings(GameTooltipLine2))  
+		
+		else if GameTooltipLine1 == "Summoning Portal" then -- Verify string is correct
+			checkWithSummoningPortal()
+		end			
     end
 end
 
@@ -287,9 +317,10 @@ local function ToolTipOnUpdate()
 
         if GameTooltipLine1 == "Meeting Stone"  and GameTooltipLine3 == nil then
             savedStoneName = GameTooltipLine2
-            GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "")
-            GameTooltipLine2 = GameTooltipLine2:gsub("'", "")
-            checkWhoHasArrived(GameTooltipLine2)
+            --GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "")
+            --GameTooltipLine2 = GameTooltipLine2:gsub("'", "")
+			--GameTooltipLine2 = GameTooltipLine2:gsub("[%c%p%s]", "") -- Need to verify this works to remove spaces, apostrophes, and colons from location names
+            checkWithSummoningStone(sterilizeStrings(GameTooltipLine2))
         end
     end
 end
