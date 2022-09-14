@@ -1,6 +1,6 @@
 ## Interface: 20503
 ## Title: WhoNeedsASummon
-## Version: 1.36
+## Version: 1.51
 ## Author: Fyfor-Whitemane
 ## SavedVariablesPerCharacter: WhoNeedsASummon_PerCharacter
 
