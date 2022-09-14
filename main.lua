@@ -1,5 +1,6 @@
 local inDebugMode = false
 local switcher = false
+local switcher2 = false
 
 local GameTooltipLine1 = ""
 local GameTooltipLine2 = ""
@@ -269,22 +270,26 @@ local function checkWithSummoningPortal()
 			if member.uiMapID == uiMapID then
 				member.hasArrived = true
 			end
+			print(member.name)
+			print(member.hasArrived)
+			if not member.hasArrived then -- Needs to be moved to a separate function
+				if not switcher2 then
+					GameTooltip:AddLine("Needs Summon:", 1, 1, 1, false)
+					switcher2 = true
+				end
+				GameTooltip:AddLine(member.name, classColors[member.class].r, classColors[member.class].g, classColors[member.class].b, false)
+				GameTooltip:Show()
+			end
 		end
 		
-		if not member.hasArrived then -- Needs to be moved to a separate function
-			if not switcher then
-				GameTooltip:Addline("Needs Summon:", 1, 1, 1, false)
-				switcher = true
-			end
-			GameTooltip:AddLine(member.name, classColors[member.class].r, classColors[member.class].g, classColors[member.class].b, false)
-			GameTooltip:Show()
-		end
+		
 	end	
 end
 
 -- CreateEvent when GameToolTip Shows
 local function ToolTipOnShow()
     switcher = false
+    switcher2 = false
     if not (GameTooltipLine1 == GameTooltipTextLeft1:GetText() and GameTooltipLine2 == GameTooltipTextLeft2:GetText() and GameTooltipLine3 == GameTooltipTextLeft3:GetText()) then
         GameTooltipLine1 = GameTooltipTextLeft1:GetText()
         GameTooltipLine2 = GameTooltipTextLeft2:GetText()
@@ -311,6 +316,7 @@ GameTooltip:HookScript("OnShow", ToolTipOnShow)
 -- CreateEvent when GameToolTip Update
 local function ToolTipOnUpdate()
     switcher = false
+    switcher2 = false
     if not (GameTooltipLine1 == GameTooltipTextLeft1:GetText() and GameTooltipLine2 == GameTooltipTextLeft2:GetText() and GameTooltipLine3 == GameTooltipTextLeft3:GetText()) then
         GameTooltipLine1 = GameTooltipTextLeft1:GetText()
         GameTooltipLine2 = GameTooltipTextLeft2:GetText()
