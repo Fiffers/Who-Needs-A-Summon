@@ -252,7 +252,6 @@ local function checkWithSummoningStone(stone)
                         GameTooltip:AddLine("Needs Summon:", 1, 1, 1, false)
                         switcher = true
                     end
-					print(classColors[member.class].r)
                     GameTooltip:AddLine(member.name, classColors[member.class].r, classColors[member.class].g, classColors[member.class].b, false)
                     GameTooltip:Show()
                 end
@@ -270,8 +269,6 @@ local function checkWithSummoningPortal()
 			if member.uiMapID == uiMapID then
 				member.hasArrived = true
 			end
-			print(member.name)
-			print(member.hasArrived)
 			if not member.hasArrived then -- Needs to be moved to a separate function
 				if not switcher2 then
 					GameTooltip:AddLine("Needs Summon:", 1, 1, 1, false)
