@@ -14,16 +14,16 @@ local _G, print, C_Map, GetRaidRosterInfo, GetNumGroupMembers, IsInGroup, GetRea
 
 -- RGB and HEX colors for each class through WotLK, because that's all that matters
 local classColors = {
-    deathknight = {r = .77, g = .12, b = .23, hex = "C41F3B"},
-    druid = {r = 1, g = .49, b = .04, hex = "FF7D0A"},
-    hunter = {r = .67, g = .83, b = .45, hex = "ABD473"},
-    mage = {r = .41, g = .80, b = .94, hex = "69CCF0"},
-    paladin = {r = .96, g = .55, b = .73, hex = "F58CBA"},
-    priest = {r = 1, g = 1, b = 1, hex = "FFFFFF"},
-    rogue = {r = 1, g = .96, b = .41, hex = "FFF569"},
-    shaman = {r = 0, g = .44, b = .87, hex = "0070DE"},
-    warlock = {r = .58, g = .51, b = .79, hex = "9482C9"},
-    warrior = {r = .78, g = .61, b = .43, hex = "C79C6E"}
+    DeathKnight = {r = .77, g = .12, b = .23, hex = "C41F3B"},
+    Druid = {r = 1, g = .49, b = .04, hex = "FF7D0A"},
+    Hunter = {r = .67, g = .83, b = .45, hex = "ABD473"},
+    Mage = {r = .41, g = .80, b = .94, hex = "69CCF0"},
+    Paladin = {r = .96, g = .55, b = .73, hex = "F58CBA"},
+    Priest = {r = 1, g = 1, b = 1, hex = "FFFFFF"},
+    Rogue = {r = 1, g = .96, b = .41, hex = "FFF569"},
+    Shaman = {r = 0, g = .44, b = .87, hex = "0070DE"},
+    Warlock = {r = .58, g = .51, b = .79, hex = "9482C9"},
+    Warrior = {r = .78, g = .61, b = .43, hex = "C79C6E"}
 }
 
 -- Numeric data below was found at:
@@ -118,7 +118,7 @@ locationIDs["ZulGurub"] = {
 
 -- TBC Locations
 locationIDs["Auchindoun"] = {
-    1952, 256, 257, 258, 259, 260, 272, "Auchindoun", "Mana-Tombs", "Sethekk Halls", "Auchenai Crypts", "Shadow Labyrinth"
+    1952, "Auchindoun", "Mana-Tombs", "Sethekk Halls", "Auchenai Crypts", "Shadow Labyrinth"
 }
 
 locationIDs["SerpentshrineCavern"] = {
@@ -210,16 +210,21 @@ locationIDs["VaultofArchavon"] = {
 	123, 1404, "Vault of Archavon"
 }
 
+local function sterilizeStrings(input)
+	--input = input:lower()
+	input = input:gsub("[%c%p%s]", "") -- Need to verify this works to remove spaces, apostrophes, and colons from location/class names
+	return input
+end
+
 local function getGroupLocations(index)
     local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(index);
     local member = {name = name, location = zone, class = class, hasArrived = false}
+	member.class = sterilizeStrings(member.class)
     member.uiMapID = C_Map.GetBestMapForUnit(member.name)
     return member
 end
 
-
-
-local function checkWhoHasArrived(stone)
+local function checkWithSummoningStone(stone)
     if IsInGroup() then
         for i = 1, GetNumGroupMembers(), 1 do
             local member  = getGroupLocations(i)
@@ -237,7 +242,7 @@ local function checkWhoHasArrived(stone)
             end
             if locationIDs[stone] then
                 for i = 1, #locationIDs[stone], 1 do
-                    if member.uiMapID == locationIDs[stone][i] or member.location == locationIDs[stone][i] then
+                    if member.uiMapID == locationIDs[stone][i] or member.location == locationIDs[stone][i] then			
                         member.hasArrived = true
                     end
                 end
@@ -246,12 +251,35 @@ local function checkWhoHasArrived(stone)
                         GameTooltip:AddLine("Needs Summon:", 1, 1, 1, false)
                         switcher = true
                     end
-                    GameTooltip:AddLine(member.name, classColors[member.class:lower()].r, classColors[member.class:lower()].g, classColors[member.class:lower()].b, false)
+					print(classColors[member.class].r)
+                    GameTooltip:AddLine(member.name, classColors[member.class].r, classColors[member.class].g, classColors[member.class].b, false)
                     GameTooltip:Show()
                 end
             end
         end
     end
+end
+
+
+local function checkWithSummoningPortal()
+	if IsInGroup() then
+		local uiMapID = C_Map.GetBestMapForUnit("Player")
+		for i = 1, GetNumGroupMembers(), 1 do
+        	local member  = getGroupLocations(i)
+			if member.uiMapID == uiMapID then
+				member.hasArrived = true
+			end
+		end
+		
+		if not member.hasArrived then -- Needs to be moved to a separate function
+			if not switcher then
+				GameTooltip:Addline("Needs Summon:", 1, 1, 1, false)
+				switcher = true
+			end
+			GameTooltip:AddLine(member.name, classColors[member.class].r, classColors[member.class].g, classColors[member.class].b, false)
+			GameTooltip:Show()
+		end
+	end	
 end
 
 -- CreateEvent when GameToolTip Shows
@@ -268,10 +296,13 @@ local function ToolTipOnShow()
                 StaticPopup_Show("WhoNeedsASummon_WELCOME")
             end
             savedStoneName = GameTooltipLine2
-            GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "")
-            GameTooltipLine2 = GameTooltipLine2:gsub("'", "")
-            checkWhoHasArrived(GameTooltipLine2)
-        end
+            --GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "")
+            --GameTooltipLine2 = GameTooltipLine2:gsub("'", "")
+            checkWithSummoningStone(sterilizeStrings(GameTooltipLine2))  
+		
+		elseif GameTooltipLine1 == "Summoning Portal" then -- Verify string is correct
+			checkWithSummoningPortal()
+		end			
     end
 end
 
@@ -287,9 +318,10 @@ local function ToolTipOnUpdate()
 
         if GameTooltipLine1 == "Meeting Stone"  and GameTooltipLine3 == nil then
             savedStoneName = GameTooltipLine2
-            GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "")
-            GameTooltipLine2 = GameTooltipLine2:gsub("'", "")
-            checkWhoHasArrived(GameTooltipLine2)
+            --GameTooltipLine2 = GameTooltipLine2:gsub("%s+", "")
+            --GameTooltipLine2 = GameTooltipLine2:gsub("'", "")
+			--GameTooltipLine2 = GameTooltipLine2:gsub("[%c%p%s]", "") -- Need to verify this works to remove spaces, apostrophes, and colons from location names
+            checkWithSummoningStone(sterilizeStrings(GameTooltipLine2))
         end
     end
 end
