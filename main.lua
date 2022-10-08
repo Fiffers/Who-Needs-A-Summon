@@ -171,7 +171,7 @@ locationIDs["AzjolNerub"] = {
 	115, 1397, "Azjol-Nerub", "Ahn'kahet: The Old Kingdom"
 }
 
-locationIDs["WyrmRestTemple"] = {
+locationIDs["TheObsidianSanctum"] = {
 	115, 1397, "The Ruby Sanctum", "The Obsidian Sanctum", "Wyrmrest Temple"
 }
 
